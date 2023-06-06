@@ -29,12 +29,7 @@ export class UploadBlogMainImageUseCase
   };
 
   async execute(command: UploadBlogMainImageCommand) {
-    if (!command.file) throw new NotFoundException();
-
-    const metadata = await sharp(command.file.buffer).metadata();
-    // console.log(metadata);
-
-    this.validateMetadata(metadata);
+    const metadata = await this.validateImage(command.file);
 
     const blog = await this.blogsQueryRepository.getRawBlogSQL(command.blogId);
 
@@ -70,18 +65,26 @@ export class UploadBlogMainImageUseCase
     return imageInfo;
   };
 
-  validateMetadata(metadata: any) {
-    const errors = [];
-    const formats = ["jpg", "jpeg", "png"];
+  async validateImage(image: any) {
+    if (!image) throw new NotFoundException();
 
-    if (!formats.includes(metadata.format)) errors.push("format");
+    const formats = ["image/jpeg", "image/jpg", "image/png"];
+
+    if (!formats.includes(image.mimetype)) throw new BadRequestException(
+      { message: makeErorrMessage("mimetype").message, field: "mimetype" });
+
+    const metadata = await sharp(image.buffer).metadata();
+    const errors = [];
+
     if (metadata.size > 1024 * 100) errors.push("size");
     if (metadata.width !== 156) errors.push("width");
     if (metadata.height !== 156) errors.push("height");
     if (errors.length !== 0) {
       const formatErr = errors.map(err =>
         ({ message: makeErorrMessage(err).message, field: err }));
+
       throw new BadRequestException(formatErr);
     }
+    return metadata;
   };
 };

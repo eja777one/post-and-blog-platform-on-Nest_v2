@@ -191,7 +191,7 @@ const formatBlog = (rawBlog: any): BlogViewModel => {
 
   if (wallpaper) {
     blog.images.wallpaper = {
-      url: process.env.STORAGE_URL + wallpaper.url,
+      url: wallpaper.url,
       width: wallpaper?.width,
       height: wallpaper?.height,
       fileSize: wallpaper?.fileSize
@@ -200,7 +200,7 @@ const formatBlog = (rawBlog: any): BlogViewModel => {
 
   if (main) {
     blog.images.main = [{
-      url: process.env.STORAGE_URL + main.url,
+      url: main.url,
       width: main?.width,
       height: main?.height,
       fileSize: main?.fileSize
@@ -237,7 +237,7 @@ const formatImage = (imageInfo: any): BlogsImagesViewModel => {
 
   if (wallpaper) {
     images.wallpaper = {
-      url: wallpaper.url,
+      url: process.env.STORAGE_URL + wallpaper.url,
       width: wallpaper.width,
       height: wallpaper.height,
       fileSize: wallpaper.fileSize
@@ -247,7 +247,7 @@ const formatImage = (imageInfo: any): BlogsImagesViewModel => {
   if (main) {
     images.main = [
       {
-        url: main.url,
+        url: process.env.STORAGE_URL + main.url,
         width: main.width,
         height: main.height,
         fileSize: main.fileSize

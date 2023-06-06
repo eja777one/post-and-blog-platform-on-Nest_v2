@@ -38,12 +38,7 @@ export class UploadPostMainImageUseCase
   };
 
   async execute(command: UploadPostMainImageCommand) {
-    if (!command.file) throw new NotFoundException();
-    // console.log(command.file);
-    const metadata = await sharp(command.file.buffer).metadata();
-    // console.log(metadata);
-
-    this.validateMetadata(metadata);
+    const metadata = await this.validateImage(command.file);
 
     const { middleImg, smallImg } = await this
       .getMiddleAndSmallImage(command.file.buffer, command.file.originalname);
@@ -72,14 +67,10 @@ export class UploadPostMainImageUseCase
     const images = [highImg, middleImg, smallImg];
 
     if (!imageInfo) {
-      const saveImages = [];
-
       for (let img of images) {
         const savedImg = await this.fileStorageAdapter
           .savePostImage(blog.id, post.id, img);
         if (!savedImg) throw new NotFoundException();
-
-        // savedImg.push(savedImg);
 
         const metadata = await sharp(img.buffer).metadata();
 
@@ -106,19 +97,27 @@ export class UploadPostMainImageUseCase
     return viewImages;
   };
 
-  validateMetadata(metadata: any) {
-    const errors = [];
-    const formats = ["jpg", "jpeg", "png"];
+  async validateImage(image: any) {
+    if (!image) throw new NotFoundException();
 
-    if (!formats.includes(metadata.format)) errors.push("format");
+    const formats = ["image/jpeg", "image/jpg", "image/png"];
+
+    if (!formats.includes(image.mimetype)) throw new BadRequestException(
+      { message: makeErorrMessage("mimetype").message, field: "mimetype" });
+
+    const errors = [];
+    const metadata = await sharp(image.buffer).metadata();
+
     if (metadata.size > 1024 * 100) errors.push("size");
     if (metadata.width !== 940) errors.push("width");
     if (metadata.height !== 432) errors.push("height");
     if (errors.length !== 0) {
       const formatErr = errors.map(err =>
         ({ message: makeErorrMessage(err).message, field: err }));
+
       throw new BadRequestException(formatErr);
     }
+    return metadata;
   };
 
   async getMiddleAndSmallImage(file: any, fileName: string) {
