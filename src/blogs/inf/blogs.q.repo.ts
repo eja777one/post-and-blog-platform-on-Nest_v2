@@ -230,28 +230,30 @@ const formatBlogForSA = (rawBlog: any): SuperAdminBlogViewModel => {
 };
 
 const formatImage = (imageInfo: any): BlogsImagesViewModel => {
-  let wallpaper: PhotoSizeViewModel;
-  let main: PhotoSizeViewModel;
+  const images = { wallpaper: null, main: [] };
 
-  for (let el of imageInfo) {
-    if (el.type === "wallpaper") wallpaper = el;
-    if (el.type === "main") main = el;
+  const wallpaper = imageInfo.find(img => img.type === "wallpaper");
+  const main = imageInfo.find(img => img.type === "main");
+
+  if (wallpaper) {
+    images.wallpaper = {
+      url: wallpaper.url,
+      width: wallpaper.width,
+      height: wallpaper.height,
+      fileSize: wallpaper.fileSize
+    };
   }
 
-  return {
-    wallpaper: {
-      url: wallpaper?.url ? process.env.STORAGE_URL + wallpaper.url : "none",
-      width: wallpaper?.width ? wallpaper.width : 0,
-      height: wallpaper?.height ? wallpaper.height : 0,
-      fileSize: wallpaper?.fileSize ? wallpaper.fileSize : 0
-    },
-    main: [
+  if (main) {
+    images.main = [
       {
-        url: main?.url ? process.env.STORAGE_URL + main.url : "none",
-        width: main?.width ? main.width : 0,
-        height: main?.height ? main.height : 0,
-        fileSize: main?.fileSize ? main.fileSize : 0
+        url: main.url,
+        width: main.width,
+        height: main.height,
+        fileSize: main.fileSize
       }
-    ]
-  };
+    ];
+  }
+
+  return images;
 };
