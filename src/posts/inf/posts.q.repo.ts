@@ -148,13 +148,7 @@ const formatPost = (rawPost: any): PostViewModel => {
       myStatus: "None",
       newestLikes: []
     },
-    images: {
-      main: [
-        { url: "none", width: 0, height: 0, fileSize: 0 },
-        { url: "none", width: 0, height: 0, fileSize: 0 },
-        { url: "none", width: 0, height: 0, fileSize: 0 }
-      ]
-    }
+    images: { main: [] }
   };
 
   if (rawPost.postImage.length === 0) return post;

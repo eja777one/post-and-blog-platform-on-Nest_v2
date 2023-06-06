@@ -183,10 +183,7 @@ const formatBlog = (rawBlog: any): BlogViewModel => {
     websiteUrl: rawBlog.websiteUrl,
     createdAt: rawBlog.createdAt,
     isMembership: rawBlog.isMembership,
-    images: {
-      wallpaper: { url: "none", width: 0, height: 0, fileSize: 0 },
-      main: [{ url: "none", width: 0, height: 0, fileSize: 0 }]
-    }
+    images: { wallpaper: null, main: [] }
   };
 
   const wallpaper = rawBlog.blogImage?.find(img => img.type === "wallpaper");
