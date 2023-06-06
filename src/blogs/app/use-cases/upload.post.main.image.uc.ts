@@ -103,7 +103,7 @@ export class UploadPostMainImageUseCase
     const formats = ["image/jpeg", "image/jpg", "image/png"];
 
     if (!formats.includes(image.mimetype)) throw new BadRequestException(
-      { message: makeErorrMessage("mimetype").message, field: "mimetype" });
+      [{ message: makeErorrMessage("mimetype").message, field: "mimetype" }]);
 
     const errors = [];
     const metadata = await sharp(image.buffer).metadata();

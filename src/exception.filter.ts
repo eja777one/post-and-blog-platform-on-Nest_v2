@@ -20,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       let resError = { errorsMessages: [] };
 
       const resBody: any = exception.getResponse();
-      // console.log(resBody);
+      console.log(resBody);
 
       resBody.message.forEach((el: any) => {
         if (!resError.errorsMessages.find((error: any) => error.field === el.field)) {
