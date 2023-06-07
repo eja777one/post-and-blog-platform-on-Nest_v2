@@ -142,7 +142,7 @@ export class UploadPostMainImageUseCase
       .toBuffer();
     const middleMetaData = await sharp(middleBuffer).metadata();
 
-    const smallBuffer = await sharp(file).resize(300, 180)
+    const smallBuffer = await sharp(file).resize(149, 96)
       .toBuffer();
     const smallMetaData = await sharp(middleBuffer).metadata();
 
