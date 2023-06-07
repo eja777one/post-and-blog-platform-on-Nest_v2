@@ -62,7 +62,11 @@ export class PostsQueryRepository {
         .offset(skip)
         .getMany();
 
+      console.log(posts);
+
       const formatPosts = formatPosts2(posts, userId);
+
+      console.log(formatPosts);
 
       return {
         pagesCount: Math.ceil(postCount / queryForSearch.pageSize),
