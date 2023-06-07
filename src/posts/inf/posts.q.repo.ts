@@ -166,6 +166,8 @@ const formatPost = (rawPost: any): PostViewModel => {
     fileSize: img.fileSize
   }));
 
+  images.sort((a: any, b: any) => b.width - a.width);
+
   post.images.main = images;
   return post;
 };
