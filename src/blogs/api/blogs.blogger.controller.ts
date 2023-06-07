@@ -104,7 +104,6 @@ export class BloggerBlogsController {
     return imageInfo;
   };
 
-
   @UseGuards(JwtAuthGuard)
   @Post()
   @ApiBearerAuth()

@@ -121,37 +121,46 @@ export class UploadPostMainImageUseCase
   };
 
   async getMiddleAndSmallImage(file: any, fileName: string) {
-    const rootPath = makeRootPath(__dirname);
+    // const rootPath = makeRootPath(__dirname);
+    //
+    // const isTempFolderExist = await existDirAsync("temp");
+    // if (!isTempFolderExist) await makeDirAsync("temp");
 
-    const isTempFolderExist = await existDirAsync("temp");
-    if (!isTempFolderExist) await makeDirAsync("temp");
+    // const middleResize = await sharp(file).resize(300, 180)
+    //   .toFile(join(rootPath, "temp", `middle_${fileName}`));
+    //
+    // const middleFileBuffer = await readFileAsync(
+    //   join("temp", `middle_${fileName}`));
+    //
+    // const smallResize = await sharp(file).resize(149, 96)
+    //   .toFile(join(rootPath, "temp", `small_${fileName}`));
+    //
+    // const smallFileBuffer = await readFileAsync(
+    //   join("temp", `small_${fileName}`));
 
-    const middleResize = await sharp(file).resize(300, 180)
-      .toFile(join(rootPath, "temp", `middle_${fileName}`));
+    const middleBuffer = await sharp(file).resize(300, 180)
+      .toBuffer();
+    const middleMetaData = await sharp(middleBuffer).metadata();
 
-    const middleFileBuffer = await readFileAsync(
-      join("temp", `middle_${fileName}`));
+    const smallBuffer = await sharp(file).resize(300, 180)
+      .toBuffer();
+    const smallMetaData = await sharp(middleBuffer).metadata();
 
-    const smallResize = await sharp(file).resize(149, 96)
-      .toFile(join(rootPath, "temp", `small_${fileName}`));
-
-    const smallFileBuffer = await readFileAsync(
-      join("temp", `small_${fileName}`));
 
     const middleImg = {
       fieldname: "file",
       encoding: "7bit",
-      mimetype: "image/jpeg",
+      mimetype: `image/${middleMetaData.format}`,
       originalname: `middle_${fileName}`,
-      buffer: middleFileBuffer,
-      size: middleResize.size
+      buffer: middleBuffer,
+      size: middleMetaData.size
     };
 
     const smallImg = {
       ...middleImg,
       originalname: `small_${fileName}`,
-      buffer: smallFileBuffer,
-      size: smallResize.size
+      buffer: smallBuffer,
+      size: smallMetaData.size
     };
 
     return { middleImg, smallImg };
