@@ -64,8 +64,6 @@ export class PostsQueryRepository {
         // .offset(skip)
         .getMany();
 
-      console.log(posts);
-
       let formatPosts = formatPosts2(posts, userId);
 
       if (formatPosts.length > 0) {

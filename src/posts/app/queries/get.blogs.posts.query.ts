@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { QueryType } from "../../../types";
+import { QueryType, sortDirection } from "../../../types";
 import { PostsQueryRepository } from "../../inf/posts.q.repo";
 import { BlogsQueryRepository } from "../../../blogs/inf/blogs.q.repo";
 import { NotFoundException } from "@nestjs/common";
@@ -24,6 +24,7 @@ export class GetBlogsPostsHandler implements IQueryHandler<GetBlogsPostsQuery> {
   async execute(query: GetBlogsPostsQuery) {
     const blog = await this.blogsQueryRepository.getBlogSQL(query.blogId);
     if (!blog) throw new NotFoundException();
+    query.query.sortDirection = sortDirection.ASC;
     const posts = await this.postQueryRepository.getViewPostsSQL(
       query.query, query.blogId, query.userId);
     return posts;
