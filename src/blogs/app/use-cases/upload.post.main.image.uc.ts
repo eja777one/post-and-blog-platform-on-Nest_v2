@@ -89,7 +89,7 @@ export class UploadPostMainImageUseCase
         if (!saveImage) throw new NotFoundException();
       }
 
-      await emptyDirAsync("temp");
+      // await emptyDirAsync("temp");
     }
 
     const viewImages = await this.postsQueryRepository.getImageInfo(post.id);
@@ -145,7 +145,6 @@ export class UploadPostMainImageUseCase
     const smallBuffer = await sharp(file).resize(300, 180)
       .toBuffer();
     const smallMetaData = await sharp(middleBuffer).metadata();
-
 
     const middleImg = {
       fieldname: "file",
