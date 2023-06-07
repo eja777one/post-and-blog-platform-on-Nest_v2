@@ -56,17 +56,21 @@ export class PostsQueryRepository {
 
       const postCount = await query.getCount();
 
-      const posts = await query
-        .orderBy(sortBy, queryForSearch.sortDirection)
-        .limit(queryForSearch.pageSize)
-        .offset(skip)
-        .getMany();
-
       console.log(postCount);
 
-      const formatPosts = formatPosts2(posts, userId);
+      const posts = await query
+        .orderBy(sortBy, queryForSearch.sortDirection)
+        // .limit(queryForSearch.pageSize)
+        // .offset(skip)
+        .getMany();
 
-      console.log(formatPosts);
+      console.log(posts);
+
+      let formatPosts = formatPosts2(posts, userId);
+
+      if (formatPosts.length > 0) {
+        formatPosts = formatPosts.slice(skip, skip + queryForSearch.pageSize);
+      }
 
       return {
         pagesCount: Math.ceil(postCount / queryForSearch.pageSize),
