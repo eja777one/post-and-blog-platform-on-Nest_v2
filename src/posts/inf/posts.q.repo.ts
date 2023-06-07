@@ -62,7 +62,7 @@ export class PostsQueryRepository {
         .offset(skip)
         .getMany();
 
-      console.log(posts);
+      console.log(posts.length);
 
       const formatPosts = formatPosts2(posts, userId);
 
