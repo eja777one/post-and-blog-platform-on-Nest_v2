@@ -9,6 +9,7 @@ import { BlogOwnerInfo } from "../dom/blog.entity.owner.info";
 import { BlogBanInfo } from "../dom/blog.entity.ban.info";
 import { errorHandler } from "../../application/error.handler";
 import { BlogImage } from "../dom/blog.entity.images";
+import { BlogSubscription } from "../dom/blog.entity.subscirption";
 
 @Injectable()
 export class BlogsRepository {
@@ -20,8 +21,48 @@ export class BlogsRepository {
     @InjectRepository(BlogBanInfo) private readonly blogBanInfoRepo:
       Repository<BlogBanInfo>,
     @InjectRepository(BlogImage) private readonly blogImageRepo:
-      Repository<BlogImage>
+      Repository<BlogImage>,
+    @InjectRepository(BlogSubscription) private readonly blogSubscriptionRepo:
+      Repository<BlogSubscription>
   ) {
+  };
+
+  async deleteSubscription(blogId: string, userId: string) {
+    try {
+      await this.blogSubscriptionRepo.delete({ blogId, userId });
+      return true;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
+  async getSubscriptionBySecret(secret: string) {
+    try {
+      const subscription = await this.blogSubscriptionRepo
+        .findOneBy({ secret });
+      return subscription;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
+  async getSubscription(blogId: string, userId: string) {
+    try {
+      const subscription = await this.blogSubscriptionRepo
+        .findOneBy({ blogId, userId });
+      return subscription;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
+  async saveSubscription(subscription: BlogSubscription) {
+    try {
+      await this.blogSubscriptionRepo.save(subscription);
+      return true;
+    } catch (e) {
+      return errorHandler(e);
+    }
   };
 
   async getImageInfo(blogId: string, type: string) {

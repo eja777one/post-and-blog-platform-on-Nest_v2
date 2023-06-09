@@ -35,7 +35,9 @@ import { Comment } from "../comments/dom/comment.entity";
 import { CommentLikes } from "../comments/dom/comment.entity.likes";
 import { BlogImage } from "../blogs/dom/blog.entity.images";
 import { PostImage } from "./dom/post.entity.images";
-import { S3StorageAdapter } from "../files.storage.adapter";
+import { S3StorageAdapter } from "../adapters/files.storage.adapter";
+import { BlogSubscription } from "../blogs/dom/blog.entity.subscirption";
+import { TelegramAdapter } from "../adapters/telegram.adapter";
 
 const PostUseCases = [
   CreateBlogsPostUseCase,
@@ -50,7 +52,8 @@ const BlogsAdapters = [BlogsRepository, BlogsQueryRepository, BlogsService];
 const CommentsAdapters = [
   CommentsService,
   CommentsRepository,
-  CommentsQueryRepository
+  CommentsQueryRepository,
+  TelegramAdapter
 ];
 
 @Module({
@@ -65,7 +68,7 @@ const CommentsAdapters = [
     //   { name: User.name, schema: UserSchema }
     // ]),
     TypeOrmModule.forFeature([Post, PostLikes, Blog, BlogOwnerInfo,
-      BlogBanInfo, BlogImage, Comment, CommentLikes, PostImage]),
+      BlogBanInfo, BlogImage, Comment, CommentLikes, PostImage, BlogSubscription]),
     AuthModule,
     SecurityModule,
     UsersModule

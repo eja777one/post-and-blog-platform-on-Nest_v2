@@ -7,6 +7,7 @@ import { PostsQueryRepository } from "../../inf/posts.q.repo";
 import { UserViewModel } from "../../../users/users.types";
 import { Post } from "../../dom/post.entity";
 import { v4 as uuidv4 } from "uuid";
+import { TelegramAdapter } from "../../../adapters/telegram.adapter";
 
 export class CreateBlogsPostCommand {
   constructor(
@@ -24,7 +25,8 @@ export class CreateBlogsPostUseCase
   constructor(
     protected postsRepository: PostsRepository,
     protected blogsQueryRepository: BlogsQueryRepository,
-    protected postsQueryRepository: PostsQueryRepository
+    protected postsQueryRepository: PostsQueryRepository,
+    protected telegramAdapter: TelegramAdapter
   ) {
   };
 
@@ -51,8 +53,16 @@ export class CreateBlogsPostUseCase
     const savePost = await this.postsRepository.savePost(post);
 
     const newPost = await this.postsQueryRepository.getPostSQL(post.id);
-    console.log(newPost);
     if (!newPost) throw new NotFoundException();
+    console.log(blog.id);
+    const subscribers = await this.blogsQueryRepository.getSubscribers(blog.id);
+    if (subscribers?.length > 0) {
+      for (let sub of subscribers) {
+        const message = `New post published for blog ${blog.name}`;
+        await this.telegramAdapter.sendMessage(message, sub.telegramId);
+      }
+    }
+
     return newPost;
   };
 };

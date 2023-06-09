@@ -11,6 +11,8 @@ import { URL } from "./types";
 import { join } from "node:path";
 import { readTextFileAsync } from "./utils/fs-utils";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
+
 // import { saveAvatarCommand } from "./sava.avatar.uc";
 
 @SkipThrottle()
@@ -20,11 +22,13 @@ export class AvatarController {
   };
 
   @Get("change-page")
+  @ApiExcludeEndpoint()
   async changeAvatarPage() {
     const data = await readTextFileAsync(
       join("views", "avatar", "change-page.html"));
     return data;
   };
+
   //
   // @Post()
   // @UseInterceptors(FileInterceptor("avatar"))

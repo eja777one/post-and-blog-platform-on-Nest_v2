@@ -1,10 +1,10 @@
 import {
-  Controller, Get, Param, Query, Req, UseGuards, Post, Body
+  Controller, Get, Param, Query, Req, UseGuards, Post, Body, HttpCode, Delete
 } from "@nestjs/common";
 import { SkipThrottle } from "@nestjs/throttler";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { Request } from "express";
-import { URL, QueryType, Paginator } from "../../types";
+import { URL, QueryType, Paginator, HTTP } from "../../types";
 import { prepareQueries } from "../../application/prepare.query";
 import { GetBlogQuery } from "../app/queries/get.blog.query";
 import { GetBlogsQuery } from "../app/queries/get.blogs.query";
@@ -14,19 +14,51 @@ import { GetBlogsPostsQuery }
   from "../../posts/app/queries/get.blogs.posts.query";
 import { AddUserInfoGuard }
   from "../../pipes&valid/add.user.info.by.token.pipe";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import {
-  sw_createPostNoBlogger, sw_getBlog, sw_getBlogs, sw_getBlogsPosts
+  sw_createPostNoBlogger, sw_getBlog, sw_getBlogs, sw_getBlogsPosts, sw_subscribeToBlog, sw_unsubscribeFromBlog
 } from "./blogs.swagger.info";
 import { ApiImplicitQuery }
   from "@nestjs/swagger/dist/decorators/api-implicit-query.decorator";
 import { PostViewModel } from "../../posts/posts.types";
+import { JwtAuthGuard } from "../../auth/guards/jwt.auth.guard";
+import { SubscribeToBlogCommand } from "../app/use-cases/subscribe.to.blog.uc";
+import { DeleteSubscribeCommand } from "../app/use-cases/delete.subscribe.uc";
 
 @ApiTags("Blogs")
 @SkipThrottle()
 @Controller(URL + "/blogs")
 export class BlogsController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {
+  };
+
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HTTP.NO_CONTENT_204)
+  @Post(":blogId/subscription")
+  @ApiBearerAuth()
+  @ApiOperation(sw_subscribeToBlog.summary)
+  @ApiResponse(sw_subscribeToBlog.status204)
+  @ApiResponse(sw_subscribeToBlog.status401)
+  @ApiResponse(sw_subscribeToBlog.status404)
+  async subscribeToBlog(@Param("blogId") blogId: string,
+                        @Req() req: Request) {
+    await this.commandBus.execute(
+      new SubscribeToBlogCommand(blogId, req.user.id));
+  };
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HTTP.NO_CONTENT_204)
+  @Delete(":blogId/subscription")
+  @ApiBearerAuth()
+  @ApiOperation(sw_unsubscribeFromBlog.summary)
+  @ApiResponse(sw_unsubscribeFromBlog.status204)
+  @ApiResponse(sw_unsubscribeFromBlog.status401)
+  @ApiResponse(sw_unsubscribeFromBlog.status404)
+  async unsubscribeFromBlog(@Param("blogId") blogId: string,
+                            @Req() req: Request) {
+    await this.commandBus.execute(
+      new DeleteSubscribeCommand(blogId, req.user.id));
   };
 
   @Get()

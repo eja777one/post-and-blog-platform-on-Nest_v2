@@ -4,7 +4,7 @@ import { PostsRepository } from "../../inf/posts.db.repo";
 import { PostsQueryRepository } from "../../inf/posts.q.repo";
 import { UserViewModel } from "../../../users/users.types";
 import { BlogsQueryRepository } from "../../../blogs/inf/blogs.q.repo";
-import { S3StorageAdapter } from "../../../files.storage.adapter";
+import { S3StorageAdapter } from "../../../adapters/files.storage.adapter";
 
 export class DeleteBlogsPostCommand {
   constructor(

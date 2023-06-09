@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { join } from "node:path";
-import { existDirAsync, makeDirAsync, saveFileAsync, unlinkFileAsync } from "./utils/fs-utils";
+import { existDirAsync, makeDirAsync, saveFileAsync, unlinkFileAsync } from "../utils/fs-utils";
 // import { SaveFileResultType } from "./sava.avatar.uc";
 import {
   CopyObjectCommand,
@@ -10,7 +10,7 @@ import {
   PutObjectCommandOutput,
   S3Client
 } from "@aws-sdk/client-s3";
-import { errorHandler } from "./application/error.handler";
+import { errorHandler } from "../application/error.handler";
 
 // @Injectable()
 // export class FileStorageAdapter {

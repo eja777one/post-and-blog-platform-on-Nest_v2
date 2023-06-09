@@ -3,7 +3,7 @@ import { IsEnum } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { BlogViewModel } from "./blogs/blogs.types";
 
-export const URL = "hometask_29/api";
+export const URL = "hometask_30/api";
 
 export class FieldError {
   @ApiProperty({
@@ -246,3 +246,12 @@ export class sw_Paginator {
   })
   totalCount: number;
 };
+
+export class GetMyTgAuthViewModel {
+  @ApiProperty({
+    description: "Link to tg bot with code as query param",
+    nullable: false,
+    example: "https://t.me/blogger_platform_bot?code=123"
+  })
+  link: string
+}

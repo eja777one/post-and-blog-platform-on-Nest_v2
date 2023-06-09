@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { BlogsQueryRepository } from "../../inf/blogs.q.repo";
 import { BlogsRepository } from "../../inf/blogs.db.repo";
 import { makeErorrMessage } from "../../../application/make.error.message";
-import { S3StorageAdapter } from "../../../files.storage.adapter";
+import { S3StorageAdapter } from "../../../adapters/files.storage.adapter";
 import { BlogImage } from "../../dom/blog.entity.images";
 
 export class UploadBlogWallpaperCommand {

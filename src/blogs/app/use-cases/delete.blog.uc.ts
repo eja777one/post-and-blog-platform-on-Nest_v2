@@ -2,7 +2,7 @@ import { ForbiddenException, NotFoundException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BlogsQueryRepository } from "../../inf/blogs.q.repo";
 import { BlogsRepository } from "../../inf/blogs.db.repo";
-import { S3StorageAdapter } from "../../../files.storage.adapter";
+import { S3StorageAdapter } from "../../../adapters/files.storage.adapter";
 
 export class DeleteBlogCommand {
   constructor(public id: string, public userId: string) {

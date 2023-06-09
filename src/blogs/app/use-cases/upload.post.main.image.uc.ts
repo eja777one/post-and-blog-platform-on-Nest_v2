@@ -7,7 +7,7 @@ import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
 import { join } from "node:path";
 import { makeErorrMessage } from "../../../application/make.error.message";
-import { S3StorageAdapter } from "../../../files.storage.adapter";
+import { S3StorageAdapter } from "../../../adapters/files.storage.adapter";
 import { PostsQueryRepository } from "../../../posts/inf/posts.q.repo";
 import { PostsRepository } from "../../../posts/inf/posts.db.repo";
 import {

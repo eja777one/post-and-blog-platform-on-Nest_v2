@@ -7,10 +7,40 @@ import { Blog } from "../dom/blog.entity";
 import { Users } from "../../users/dom/users.entity";
 import { errorHandler } from "../../application/error.handler";
 import { BlogImage } from "../dom/blog.entity.images";
+import { BlogSubscription } from "../dom/blog.entity.subscirption";
 
 @Injectable()
 export class BlogsQueryRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {
+  };
+
+  async getSubscribers(blogId: string) {
+    try {
+      let subscribers = await this.dataSource
+        .getRepository(BlogSubscription)
+        .createQueryBuilder("bs")
+        .where("bs.blogId = :blogId", { blogId })
+        .getMany();
+      // console.log(subscribers);
+      subscribers = subscribers.filter(sub => sub.telegramId !== null);
+      return subscribers;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
+  async getSubscription(userId: string) {
+    try {
+      const subscription = await this.dataSource
+        .getRepository(BlogSubscription)
+        .createQueryBuilder("bs")
+        .where("bs.userId = :userId", { userId })
+        .getOne();
+
+      return subscription;
+    } catch (e) {
+      return errorHandler(e);
+    }
   };
 
   async getImageInfo(blogId: string): Promise<BlogsImagesViewModel> {

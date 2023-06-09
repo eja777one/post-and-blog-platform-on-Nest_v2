@@ -33,10 +33,12 @@ import { BlogBanInfo } from "./dom/blog.entity.ban.info";
 import { Comment } from "../comments/dom/comment.entity";
 import { CommentLikes } from "../comments/dom/comment.entity.likes";
 import { UploadBlogWallpaperUseCase } from "./app/use-cases/upload.blog.wallpaper.uc";
-import { S3StorageAdapter } from "../files.storage.adapter";
+import { S3StorageAdapter } from "../adapters/files.storage.adapter";
 import { BlogImage } from "./dom/blog.entity.images";
 import { UploadBlogMainImageUseCase } from "./app/use-cases/upload.blog.main.image.uc";
 import { UploadPostMainImageUseCase } from "./app/use-cases/upload.post.main.image.uc";
+import { SubscribeToBlogUseCase } from "./app/use-cases/subscribe.to.blog.uc";
+import { BlogSubscription } from "./dom/blog.entity.subscirption";
 
 const blogsUseCases = [
   UpdateBlogUseCase,
@@ -47,7 +49,8 @@ const blogsUseCases = [
   SetBanStatusForBlogUseCase,
   UploadBlogWallpaperUseCase,
   UploadBlogMainImageUseCase,
-  UploadPostMainImageUseCase
+  UploadPostMainImageUseCase,
+  SubscribeToBlogUseCase
 ];
 const blogsQueries = [
   GetBlogHandler,
@@ -55,7 +58,7 @@ const blogsQueries = [
   GetBloggerBlogsHandler,
   GetSuperAdminBlogsHandler,
   GetBloggerBlogCommentsHandler,
-  GetBlogsPostsHandler
+  GetBlogsPostsHandler,
 ];
 const blogsAdapters = [BlogsService, BlogsRepository, BlogsQueryRepository];
 
@@ -63,7 +66,7 @@ const blogsAdapters = [BlogsService, BlogsRepository, BlogsQueryRepository];
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([Blog, BlogOwnerInfo, BlogBanInfo, Comment,
-      CommentLikes, BlogImage]),
+      CommentLikes, BlogImage, BlogSubscription]),
     // MongooseModule.forFeature([
     //   { name: Blog.name, schema: BlogSchema },
     //   { name: Security.name, schema: SecuritySchema },

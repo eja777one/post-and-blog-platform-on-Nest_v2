@@ -20,6 +20,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { QuizModule } from "./quiz/quiz.module";
 import { AvatarController } from "./avatar.controller";
 import { CqrsModule } from "@nestjs/cqrs";
+import { TelegramAdapter } from "./adapters/telegram.adapter";
+import { IntegrationsModule } from "./integrations/integrations.module";
 // import { saveAvatarUseCase } from "./sava.avatar.uc";
 
 export const mongoUri = process.env.mongoURI || "mongodb://0.0.0.0:27017";
@@ -70,12 +72,13 @@ if (!mongoUri) throw new Error("DB url does not found");
     UsersModule,
     CommentsModule,
     SecurityModule,
-    QuizModule
+    QuizModule,
+    IntegrationsModule
   ],
   controllers: [AppController, TestsController, AvatarController],
   providers: [AppService, /*saveAvatarUseCase,*/
     // { provide: FileStorageAdapter, useClass: S3StorageAdapter },
-    { provide: APP_GUARD, useClass: ThrottlerGuard }]
+    { provide: APP_GUARD, useClass: ThrottlerGuard }, TelegramAdapter]
 })
 export class AppModule {
 }

@@ -2,11 +2,37 @@ import { HttpStatus } from "@nestjs/common";
 import { Paginator } from "../../types";
 import { BlogViewModel, sw_Paginator_BlogViewModel } from "../blogs.types";
 import { PostViewModel, sw_Paginator_PostViewModel } from "../../posts/posts.types";
-import { pageNumber, pageSize, sortBy, sortDirection } from "../../swagger.info";
+import { pageNumber, pageSize, sortBy, sortDirection, UnauthorizedError } from "../../swagger.info";
 
 const NotFoundError = {
   status: HttpStatus.NOT_FOUND,
   description: "Blog was not found"
+};
+
+export const sw_unsubscribeFromBlog = {
+  summary: {
+    summary: "Unsubscribe user from blog. Notification about new posts" +
+      " will not send to Telegram Bot"
+  },
+  status204: {
+    status: HttpStatus.NO_CONTENT,
+    description: "User was unsubscribe from blog"
+  },
+  status401: UnauthorizedError,
+  status404: NotFoundError
+};
+
+export const sw_subscribeToBlog = {
+  summary: {
+    summary: "Subscribe user to blog. Notification about new posts" +
+      " will be send to Telegram Bot"
+  },
+  status204: {
+    status: HttpStatus.NO_CONTENT,
+    description: "User was subscribe to blog"
+  },
+  status401: UnauthorizedError,
+  status404: NotFoundError
 };
 
 export const sw_getBlogs = {
