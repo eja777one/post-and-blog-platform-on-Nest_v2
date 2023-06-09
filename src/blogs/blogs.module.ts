@@ -39,6 +39,7 @@ import { UploadBlogMainImageUseCase } from "./app/use-cases/upload.blog.main.ima
 import { UploadPostMainImageUseCase } from "./app/use-cases/upload.post.main.image.uc";
 import { SubscribeToBlogUseCase } from "./app/use-cases/subscribe.to.blog.uc";
 import { BlogSubscription } from "./dom/blog.entity.subscirption";
+import { DeleteSubscribeUseCase } from "./app/use-cases/delete.subscribe.uc";
 
 const blogsUseCases = [
   UpdateBlogUseCase,
@@ -50,7 +51,8 @@ const blogsUseCases = [
   UploadBlogWallpaperUseCase,
   UploadBlogMainImageUseCase,
   UploadPostMainImageUseCase,
-  SubscribeToBlogUseCase
+  SubscribeToBlogUseCase,
+  DeleteSubscribeUseCase
 ];
 const blogsQueries = [
   GetBlogHandler,

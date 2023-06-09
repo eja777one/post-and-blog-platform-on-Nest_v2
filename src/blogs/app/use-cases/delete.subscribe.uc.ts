@@ -19,9 +19,11 @@ export class DeleteSubscribeUseCase
 
     if (!subcription) throw new NotFoundException();
 
-    const deleteSubscription = await this.blogsRepository
-      .deleteSubscription(command.blogId, command.userId);
+    subcription.status = "Unsubscribed";
 
-    if (!deleteSubscription) throw new NotFoundException();
+    const saveSubscription = await this.blogsRepository
+      .saveSubscription(subcription);
+
+    if (!saveSubscription) throw new NotFoundException();
   };
 };

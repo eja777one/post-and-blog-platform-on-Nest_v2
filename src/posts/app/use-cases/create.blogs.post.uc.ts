@@ -58,6 +58,8 @@ export class CreateBlogsPostUseCase
     const subscribers = await this.blogsQueryRepository.getSubscribers(blog.id);
     if (subscribers?.length > 0) {
       for (let sub of subscribers) {
+        console.log(sub);
+        if (sub.status === "Unsubscribed") continue;
         const message = `New post published for blog ${blog.name}`;
         await this.telegramAdapter.sendMessage(message, sub.telegramId);
       }

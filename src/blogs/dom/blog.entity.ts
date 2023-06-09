@@ -3,6 +3,7 @@ import { BlogOwnerInfo } from "./blog.entity.owner.info";
 import { BlogBanInfo } from "./blog.entity.ban.info";
 import { Post } from "../../posts/dom/post.entity";
 import { BlogImage } from "./blog.entity.images";
+import { BlogSubscription } from "./blog.entity.subscirption";
 
 @Entity()
 export class Blog {
@@ -38,4 +39,8 @@ export class Blog {
   @OneToMany(() => BlogImage,
     (blogImage) => blogImage.blog)
   blogImage: BlogImage[];
+
+  @OneToMany(() => BlogSubscription,
+    (blogSubscription) => blogSubscription.blog)
+  blogSubscription: BlogSubscription[];
 };

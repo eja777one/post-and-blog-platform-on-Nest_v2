@@ -26,4 +26,7 @@ export class BlogSubscription {
 
   @Column("character varying", { nullable: true })
   telegramId: string;
+
+  @Column("character varying", { nullable: true })
+  status: string;
 };

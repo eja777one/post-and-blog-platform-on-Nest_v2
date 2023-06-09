@@ -1,6 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { Paginator, QueryType } from "../../types";
-import { BlogsImagesViewModel, BlogViewModel, PhotoSizeViewModel, SuperAdminBlogViewModel } from "../blogs.types";
+import {
+  BlogsImagesViewModel,
+  BlogViewModel,
+  PhotoSizeViewModel,
+  PublicBlogViewModel,
+  SuperAdminBlogViewModel
+} from "../blogs.types";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { Blog } from "../dom/blog.entity";
@@ -127,6 +133,45 @@ export class BlogsQueryRepository {
     }
   };
 
+  async getPublicViewBlogsSQL(queryForSearch: QueryType, userId?: string)
+    : Promise<Paginator<PublicBlogViewModel>> {
+
+    const term = queryForSearch.searchNameTerm ?
+      `%${queryForSearch.searchNameTerm}%` : `%%`;
+
+    const skip = ((queryForSearch.pageNumber - 1) * queryForSearch.pageSize);
+
+    try {
+      const query = this.dataSource
+        .getRepository(Blog)
+        .createQueryBuilder("b")
+        .innerJoin("b.blogBanInfo", "bbi")
+        .leftJoinAndSelect("b.blogImage", "bi")
+        .leftJoinAndSelect("b.blogSubscription", "bs")
+        .where("bbi.isBanned = false AND LOWER(b.name) LIKE LOWER(:term)",
+          { term });
+
+      const blogsCount = await query.getCount();
+
+      const blogs = await query
+        .orderBy(`b.${queryForSearch.sortBy} COLLATE "C"`,
+          queryForSearch.sortDirection)
+        .limit(queryForSearch.pageSize)
+        .offset(skip)
+        .getMany();
+
+      return {
+        pagesCount: Math.ceil(blogsCount / queryForSearch.pageSize),
+        page: queryForSearch.pageNumber,
+        pageSize: queryForSearch.pageSize,
+        totalCount: blogsCount,
+        items: blogs.map(blog => formatPublicBlog(blog, userId))
+      };
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
   async getViewBlogsSQL(queryForSearch: QueryType)
     : Promise<Paginator<BlogViewModel>> {
 
@@ -206,7 +251,7 @@ export class BlogsQueryRepository {
 };
 
 const formatBlog = (rawBlog: any): BlogViewModel => {
-  const blog = {
+  const blog: any = {
     id: rawBlog.id,
     name: rawBlog.name,
     description: rawBlog.description,
@@ -236,6 +281,25 @@ const formatBlog = (rawBlog: any): BlogViewModel => {
       fileSize: main?.fileSize
     }];
   }
+
+  return blog;
+};
+
+const formatPublicBlog = (rawBlog: any, userId?: any): PublicBlogViewModel => {
+  const blog: any = formatBlog(rawBlog);
+
+  if (rawBlog.blogSubscription.length > 0) {
+    const blogSubscription = rawBlog.blogSubscription
+      .filter(el => el.status === 'Subscribed');
+
+    blog.subscribersCount = blogSubscription.length;
+  } else blog.subscribersCount = 0;
+
+  if (userId) {
+    const subscription = rawBlog.blogSubscription
+      .find(el => el.userId === userId);
+    blog.currentUserSubscriptionStatus = subscription.status;
+  } else blog.currentUserSubscriptionStatus = "None";
 
   return blog;
 };

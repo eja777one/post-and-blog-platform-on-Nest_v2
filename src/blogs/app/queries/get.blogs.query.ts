@@ -3,7 +3,7 @@ import { BlogsQueryRepository } from "../../inf/blogs.q.repo";
 import { QueryType } from "../../../types";
 
 export class GetBlogsQuery {
-  constructor(public query: QueryType) {
+  constructor(public query: QueryType, public userId: string) {
   };
 };
 
@@ -13,7 +13,8 @@ export class GetBlogsHandler implements IQueryHandler<GetBlogsQuery> {
   };
 
   async execute(query: GetBlogsQuery) {
-    const blogs = await this.blogsQueryRepository.getViewBlogsSQL(query.query);
+    const blogs = await this.blogsQueryRepository
+      .getPublicViewBlogsSQL(query.query, query.userId);
     return blogs;
   };
 };

@@ -19,13 +19,25 @@ export class SubscribeToBlogUseCase
     const blog = await this.blogsRepository.getBlog(command.blogId);
     if (!blog) throw new NotFoundException();
 
-    const subcription = new BlogSubscription();
-    subcription.blogId = blog.id;
-    subcription.userId = command.userId;
-    subcription.secret = uuidv4();
+    const checkSubscription = await this.blogsRepository
+      .getSubscription(command.blogId, command.userId);
 
-    const saveSubscription = await this.blogsRepository
-      .saveSubscription(subcription);
-    if (!saveSubscription) throw new NotFoundException();
+    if (checkSubscription) {
+      checkSubscription.status = "Subscribed";
+
+      const saveSubscription = await this.blogsRepository
+        .saveSubscription(checkSubscription);
+      if (!saveSubscription) throw new NotFoundException();
+    } else {
+      const subcription = new BlogSubscription();
+      subcription.blogId = blog.id;
+      subcription.userId = command.userId;
+      subcription.secret = uuidv4();
+      subcription.status = "Subscribed";
+
+      const saveSubscription = await this.blogsRepository
+        .saveSubscription(subcription);
+      if (!saveSubscription) throw new NotFoundException();
+    }
   };
 };

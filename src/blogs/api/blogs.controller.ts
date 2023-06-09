@@ -9,14 +9,16 @@ import { prepareQueries } from "../../application/prepare.query";
 import { GetBlogQuery } from "../app/queries/get.blog.query";
 import { GetBlogsQuery } from "../app/queries/get.blogs.query";
 import { CreateTestBlogCommand } from "../app/use-cases/create.test.blog.uc";
-import { BlogInputModel, BlogViewModel } from "../blogs.types";
+import { BlogInputModel, BlogViewModel, PublicBlogViewModel } from "../blogs.types";
 import { GetBlogsPostsQuery }
   from "../../posts/app/queries/get.blogs.posts.query";
 import { AddUserInfoGuard }
   from "../../pipes&valid/add.user.info.by.token.pipe";
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags }
+  from "@nestjs/swagger";
 import {
-  sw_createPostNoBlogger, sw_getBlog, sw_getBlogs, sw_getBlogsPosts, sw_subscribeToBlog, sw_unsubscribeFromBlog
+  sw_createPostNoBlogger, sw_getBlog, sw_getBlogs, sw_getBlogsPosts,
+  sw_subscribeToBlog, sw_unsubscribeFromBlog
 } from "./blogs.swagger.info";
 import { ApiImplicitQuery }
   from "@nestjs/swagger/dist/decorators/api-implicit-query.decorator";
@@ -31,7 +33,6 @@ import { DeleteSubscribeCommand } from "../app/use-cases/delete.subscribe.uc";
 export class BlogsController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {
   };
-
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HTTP.NO_CONTENT_204)
@@ -61,6 +62,7 @@ export class BlogsController {
       new DeleteSubscribeCommand(blogId, req.user.id));
   };
 
+  @UseGuards(AddUserInfoGuard)
   @Get()
   @ApiImplicitQuery(sw_getBlogs.searchNameTerm)
   @ApiImplicitQuery(sw_getBlogs.sortBy)
@@ -70,9 +72,10 @@ export class BlogsController {
   @ApiOperation(sw_getBlogs.summary)
   @ApiResponse(sw_getBlogs.status200)
   async getBlogs(@Req() req: Request, @Query() query: QueryType):
-    Promise<Paginator<BlogViewModel>> {
+    Promise<Paginator<PublicBlogViewModel>> {
     const queryForSearch = prepareQueries(query);
-    const blogs = await this.queryBus.execute(new GetBlogsQuery(queryForSearch));
+    const blogs = await this.queryBus.execute(
+      new GetBlogsQuery(queryForSearch, req.user?.id));
     return blogs;
   };
 

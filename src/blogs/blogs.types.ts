@@ -147,8 +147,25 @@ export class BlogViewModel {
     nullable: false,
     type: BlogsImagesViewModel
   })
-  images: BlogsImagesViewModel
+  images: BlogsImagesViewModel;
 };
+
+type SubscriptionStatuses = "Subscribed" | "Unsubscribed" | "None ";
+
+export class PublicBlogViewModel extends BlogViewModel {
+  @ApiProperty({
+    description: "Show user's subscription status (Subscribed, Unsubscribed, None)",
+    nullable: false,
+    example: "Subscribed"
+  })
+  currentUserSubscriptionStatus: SubscriptionStatuses;
+  @ApiProperty({
+    description: "Show blogs subscribers count",
+    nullable: false,
+    example: 0
+  })
+  subscribersCount: number;
+}
 
 class BlogOwnerInfo {
   @ApiProperty({
