@@ -30,6 +30,7 @@ export class IntegrationsController {
     await this.commandBus.execute(new AddTelegramIdCommand(text, id));
   };
 
+
   @UseGuards(JwtAuthGuard)
   @Get("telegram/auth-bot-link")
   @ApiBearerAuth()
