@@ -60,7 +60,7 @@ export class CreateBlogsPostUseCase
       for (let sub of subscribers) {
         console.log(sub);
         if (sub.status === "Unsubscribed") continue;
-        const message = `New post published for blog ${blog.name}`;
+        const message = `New post published for blog "${blog.name}"`;
         await this.telegramAdapter.sendMessage(message, sub.telegramId);
       }
     }

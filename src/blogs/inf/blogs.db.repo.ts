@@ -27,6 +27,16 @@ export class BlogsRepository {
   ) {
   };
 
+  async updateSubscriptions(userId: string, telegramId: string) {
+    try {
+      await this.blogSubscriptionRepo
+        .update({ userId }, { telegramId });
+      return true;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
   async deleteSubscription(blogId: string, userId: string) {
     try {
       await this.blogSubscriptionRepo.delete({ blogId, userId });

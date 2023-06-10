@@ -1,4 +1,3 @@
-import { NotFoundException } from "@nestjs/common";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BlogsQueryRepository } from "../../../blogs/inf/blogs.q.repo";
 import { BlogsRepository } from "../../../blogs/inf/blogs.db.repo";
@@ -26,13 +25,11 @@ export class AddTelegramIdUseCase
     const subscription = await this.blogsRepository
       .getSubscriptionBySecret(code);
 
-    if (subscription.telegramId) return;
+    if (subscription?.telegramId) return;
 
-    subscription.telegramId = command.telegramId;
-
-    const saveSubscription = await this.blogsRepository
-      .saveSubscription(subscription);
-
-    // if (!saveSubscription) throw new NotFoundException();
+    if (subscription) {
+      await this.blogsRepository.updateSubscriptions(
+        subscription.userId, command.telegramId);
+    }
   };
 };
