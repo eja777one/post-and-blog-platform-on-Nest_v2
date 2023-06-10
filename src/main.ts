@@ -8,6 +8,7 @@ import { SwaggerModule } from "@nestjs/swagger";
 import { swaggerConfig, writeSwaggerFiles } from "./swagger.config";
 import ngrok from "ngrok";
 import { TelegramAdapter } from "./adapters/telegram.adapter";
+import { join } from "node:path";
 
 declare global {
   namespace Express {
@@ -48,8 +49,9 @@ async function bootstrap() {
 
   console.log(baseUrl);
 
-  await telegramAdapter.setWebhook(baseUrl +
-    "/hometask_30/api/integrations/telegram/webhook");
+  await telegramAdapter.setWebhook(
+    join(baseUrl, "hometask_30", "api", "integrations", "telegram", "webhook")
+  );
 }
 
 bootstrap();
