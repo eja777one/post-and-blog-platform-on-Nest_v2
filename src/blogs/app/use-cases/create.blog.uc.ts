@@ -53,7 +53,7 @@ export class CreateBlogUseCase implements ICommandHandler<CreateBlogCommand> {
     if (!saveBlog || !saveBlogBanInfo || !saveBlogOwnerInfo)
       throw new NotFoundException();
 
-    const newBlog = await this.blogsQueryRepository.getBlogSQL(blogId);
+    const newBlog = await this.blogsQueryRepository.getPublicBlogSQL(blogId);
     // console.log(newBlog);
     if (!newBlog) throw new NotFoundException();
 
