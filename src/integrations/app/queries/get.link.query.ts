@@ -23,7 +23,7 @@ export class GetBlogHandler implements IQueryHandler<GetLinkQuery> {
     if (!subscription) throw new NotFoundException();
 
     return {
-      link: `https://t.me/BlogPlatformBot?code=${subscription.secret}`
+      link: `https://t.me/BlogPlatformBot?start=code=${subscription.secret}`
     };
   };
 };
