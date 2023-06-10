@@ -22,8 +22,12 @@ export class GetBlogHandler implements IQueryHandler<GetLinkQuery> {
 
     if (!subscription) throw new NotFoundException();
 
-    return {
+    const link = {
       link: `https://t.me/BlogPlatformBot?code=${subscription.secret}`
     };
+
+    console.log(link);
+
+    return link;
   };
 };

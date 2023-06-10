@@ -19,7 +19,8 @@ export class AddTelegramIdUseCase
   async execute(command: AddTelegramIdCommand) {
     if (!command.text || !command.telegramId) return;
     const code = command.text.split("=")[1];
-    // console.log(code);
+    console.log(command.text);
+    console.log(code);
     if (!code) return;
 
     const subscription = await this.blogsRepository
@@ -31,5 +32,6 @@ export class AddTelegramIdUseCase
       await this.blogsRepository.updateSubscriptions(
         subscription.userId, command.telegramId);
     }
+    console.log('subscribed');
   };
 };
