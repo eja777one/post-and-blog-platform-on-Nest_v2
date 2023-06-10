@@ -79,6 +79,24 @@ export class BlogsQueryRepository {
     }
   };
 
+  async getPublicBlogSQL(id: string, userId?: string)
+    : Promise<PublicBlogViewModel> | null {
+    try {
+      const rawBlog = await this.dataSource
+        .getRepository(Blog)
+        .createQueryBuilder("b")
+        .innerJoin("b.blogBanInfo", "bbi")
+        .leftJoinAndSelect("b.blogImage", "bi")
+        .leftJoinAndSelect("b.blogSubscription", "bs")
+        .where("b.id = :id AND bbi.isBanned = false", { id })
+        .getOne();
+      // console.log(rawBlog);
+      return rawBlog ? formatPublicBlog(rawBlog, userId) : null;
+    } catch (e) {
+      return errorHandler(e);
+    }
+  };
+
   async getRawBlogSQL(id: string) {
     try {
       const blog = await this.dataSource
@@ -290,7 +308,7 @@ const formatPublicBlog = (rawBlog: any, userId?: any): PublicBlogViewModel => {
 
   if (rawBlog.blogSubscription.length > 0) {
     const blogSubscription = rawBlog.blogSubscription
-      .filter(el => el.status === 'Subscribed');
+      .filter(el => el.status === "Subscribed");
 
     blog.subscribersCount = blogSubscription.length;
   } else blog.subscribersCount = 0;
@@ -298,7 +316,8 @@ const formatPublicBlog = (rawBlog: any, userId?: any): PublicBlogViewModel => {
   if (userId) {
     const subscription = rawBlog.blogSubscription
       .find(el => el.userId === userId);
-    blog.currentUserSubscriptionStatus = subscription.status;
+    const status = subscription?.status ? subscription.status : "None";
+    blog.currentUserSubscriptionStatus = status;
   } else blog.currentUserSubscriptionStatus = "None";
 
   return blog;

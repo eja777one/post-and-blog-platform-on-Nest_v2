@@ -3,7 +3,7 @@ import { BlogInputModel, BlogViewModel } from "../src/blogs/blogs.types";
 import { CommentViewModel, CommentInputModel } from "../src/comments/comments.types";
 import { PostViewModel } from "../src/posts/posts.types";
 
-export const URL = "/hometask_29/api";
+export const URL = "/hometask_30/api";
 
 // for Blogs
 
@@ -19,6 +19,18 @@ export const blogInput1: BlogInputModel = {
 export const blogInput2: BlogInputModel = {
   name: "blog_name_2",
   description: "blog_description_2",
+  websiteUrl: "https://www.google.com/"
+};
+
+export const blogInput3: BlogInputModel = {
+  name: "blog_name_3",
+  description: "blog_description_3",
+  websiteUrl: "https://www.google.com/"
+};
+
+export const blogInput4: BlogInputModel = {
+  name: "blog_name_4",
+  description: "blog_description_4",
   websiteUrl: "https://www.google.com/"
 };
 

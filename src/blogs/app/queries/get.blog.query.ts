@@ -3,7 +3,7 @@ import { BlogsQueryRepository } from "../../inf/blogs.q.repo";
 import { NotFoundException } from "@nestjs/common";
 
 export class GetBlogQuery {
-  constructor(public id: string) {
+  constructor(public id: string, public userId: string | undefined) {
   };
 };
 
@@ -13,7 +13,8 @@ export class GetBlogHandler implements IQueryHandler<GetBlogQuery> {
   };
 
   async execute(query: GetBlogQuery) {
-    const blog = await this.blogsQueryRepository.getBlogSQL(query.id);
+    const blog = await this.blogsQueryRepository
+      .getPublicBlogSQL(query.id, query.userId);
     if (!blog) throw new NotFoundException();
     return blog;
   };

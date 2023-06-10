@@ -97,12 +97,14 @@ export class BlogsController {
     return blogsPosts;
   };
 
+  @UseGuards(AddUserInfoGuard)
   @Get(":id")
   @ApiOperation(sw_getBlog.summary)
   @ApiResponse(sw_getBlog.status200)
   @ApiResponse(sw_getBlog.status404)
-  async getBlog(@Param("id") id: string) {
-    const blog = await this.queryBus.execute(new GetBlogQuery(id));
+  async getBlog(@Param("id") id: string, @Req() req: Request)
+    : Promise<PublicBlogViewModel> {
+    const blog = await this.queryBus.execute(new GetBlogQuery(id, req.user?.id));
     return blog;
   };
 

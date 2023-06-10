@@ -31,7 +31,7 @@ if (!mongoUri) throw new Error("DB url does not found");
   imports: [
     CqrsModule,
     configModule,
-    MongooseModule.forRoot(mongoUri),
+    // MongooseModule.forRoot(mongoUri),
     // TypeOrmModule.forRoot({
     //     type: "postgres",
     //     host: "localhost",
