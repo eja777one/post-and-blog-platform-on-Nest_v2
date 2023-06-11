@@ -24,6 +24,6 @@ export class TelegramAdapter {
 
   async echo() {
     await axios.post(process.env.BASE_URL + "/app/echo",
-      { url: TelegramAdapter.url, baseUrl: process.env.BASE_URL });
+      { url: TelegramAdapter.url, baseUrl: process.env.BASE_URL, tgToken: process.env.TG_TOKEN });
   }
 }
