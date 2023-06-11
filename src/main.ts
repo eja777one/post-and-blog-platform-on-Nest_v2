@@ -9,6 +9,7 @@ import { swaggerConfig, writeSwaggerFiles } from "./swagger.config";
 import ngrok from "ngrok";
 import { TelegramAdapter } from "./adapters/telegram.adapter";
 import { join } from "node:path";
+import axios from "axios";
 
 declare global {
   namespace Express {
@@ -51,6 +52,7 @@ async function bootstrap() {
   const tgUrl = baseUrl + "/hometask_30/api/integrations/telegram/webhook";
   console.log(tgUrl);
   await telegramAdapter.setWebhook(tgUrl);
+  await axios.post(baseUrl + "/app/echo", { url: baseUrl, tgUrl });
 }
 
 bootstrap();
