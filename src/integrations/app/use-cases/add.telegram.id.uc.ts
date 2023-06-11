@@ -18,6 +18,14 @@ export class AddTelegramIdUseCase
   };
 
   async execute(command: AddTelegramIdCommand) {
+    const url = process.env.BASE_URL || "http://localhost:3004";
+
+    await axios.post(url + "/app/echo", {
+      message: command.text,
+      telegramId: command.telegramId,
+      flag: "no flag"
+    });
+
     if (!command.text || !command.telegramId) return;
     const code = command.text.split("=")[1];
     console.log(command.text);
@@ -36,8 +44,6 @@ export class AddTelegramIdUseCase
       flag = true;
     }
     console.log("subscribed");
-
-    const url = process.env.BASE_URL || "http://localhost:3004";
 
     await axios.post(url + "/app/echo", {
       message: command.text,
