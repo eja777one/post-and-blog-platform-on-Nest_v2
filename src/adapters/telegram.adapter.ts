@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from "axios";
 @Injectable()
 export class TelegramAdapter {
   private axiosInstance: AxiosInstance;
-  url: string;
+  static url: string;
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -18,12 +18,12 @@ export class TelegramAdapter {
   };
 
   async setWebhook(url: string) {
-    this.url = url;
+    TelegramAdapter.url = url;
     await this.axiosInstance.post(`setWebhook`, { url });
   };
 
   async echo() {
     await axios.post(process.env.BASE_URL + "/app/echo",
-      { url: this.url, baseUrl: process.env.BASE_URL });
+      { url: TelegramAdapter.url, baseUrl: process.env.BASE_URL });
   }
 }
