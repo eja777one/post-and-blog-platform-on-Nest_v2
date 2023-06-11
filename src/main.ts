@@ -18,7 +18,7 @@ declare global {
   }
 }
 
-const settings = { baseUrl: process.env.BASE_URL || "https://localhost:3004" };
+const settings = { baseUrl: process.env.BASE_URL || "http://localhost:3004" };
 
 async function connectToNgrok() {
   const url = await ngrok.connect(3004);
@@ -48,10 +48,9 @@ async function bootstrap() {
   }
 
   console.log(baseUrl);
-
-  await telegramAdapter.setWebhook(
-    join(baseUrl, "hometask_30", "api", "integrations", "telegram", "webhook")
-  );
+  const tgUrl = baseUrl + "/hometask_30/api/integrations/telegram/webhook";
+  console.log(tgUrl);
+  await telegramAdapter.setWebhook(tgUrl);
 }
 
 bootstrap();

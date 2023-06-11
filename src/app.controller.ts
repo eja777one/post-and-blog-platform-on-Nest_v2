@@ -28,4 +28,10 @@ export class AppController {
     console.log(payload);
     return { status: "success" };
   }
+
+  @Post("echo")
+  @ApiExcludeEndpoint()
+  async logMessage(@Body() payload: any) {
+    console.log(payload);
+  }
 }

@@ -1,6 +1,7 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BlogsQueryRepository } from "../../../blogs/inf/blogs.q.repo";
 import { BlogsRepository } from "../../../blogs/inf/blogs.db.repo";
+import axios from "axios";
 
 export class AddTelegramIdCommand {
   constructor(public text: string, public telegramId: string) {
@@ -26,12 +27,21 @@ export class AddTelegramIdUseCase
     const subscription = await this.blogsRepository
       .getSubscriptionBySecret(code);
 
-    if (subscription?.telegramId) return;
+    let flag = false;
 
-    if (subscription) {
+    if (!subscription?.telegramId) {
       await this.blogsRepository.updateSubscriptions(
         subscription.userId, command.telegramId);
+      flag = true;
     }
-    console.log('subscribed');
+    console.log("subscribed");
+
+    const url = process.env.BASE_URL || "http://localhost:3004";
+
+    await axios.post(url + "/app/echo", {
+      message: command.text,
+      telegramId: command.telegramId,
+      flag
+    });
   };
 };
