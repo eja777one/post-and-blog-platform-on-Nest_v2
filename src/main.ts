@@ -53,7 +53,7 @@ async function bootstrap() {
   console.log(tgUrl);
   // await telegramAdapter.setWebhook(tgUrl);
 
-  await axios.post(`https://api.telegram.org/bot${process.env.TG_TOKEN}/setWebhook`, {url: tgUrl})
+  // await axios.post(baseUrl + "/app/connectToTg", { url: tgUrl });
 }
 
 bootstrap();

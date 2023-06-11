@@ -53,6 +53,8 @@ export class TestsController {
   @ApiResponse(sw_deleteAllData.status204)
   @ApiResponse(sw_deleteAllData.status401)
   async deleteAllData(@Res() res: Response) {
+    let baseUrl = process.env.BASE_URL || "http://localhost:3004";
+    const tgUrl = baseUrl + "/hometask_30/api/integrations/telegram/webhook";
     await this.blogsRepository.deleteAllSQL();
     await this.postsRepository.deleteAllSQL();
     await this.commentsRepository.deleteAllSQL();
@@ -61,6 +63,7 @@ export class TestsController {
     await this.passwordRecoveryRepository.deleteAllSQL();
     await this.quizRepository.deleteAllSQL();
     await this.telegramAdapter.echo();
+    await this.telegramAdapter.setWebhook(tgUrl);
     res.sendStatus(HttpStatus.NO_CONTENT);
   }
 

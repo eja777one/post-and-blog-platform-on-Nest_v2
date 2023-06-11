@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post } from "@nestjs/common";
 import { AppService } from "./app.service";
 import { ApiExcludeEndpoint } from "@nestjs/swagger";
 import { TelegramAdapter } from "./adapters/telegram.adapter";
+import axios from "axios";
 
 @Controller("app")
 export class AppController {
@@ -33,5 +34,13 @@ export class AppController {
   @ApiExcludeEndpoint()
   async logMessage(@Body() payload: any) {
     console.log(payload);
+  }
+
+  @Post("connectToTg")
+  @ApiExcludeEndpoint()
+  async connectToTg(@Body() payload: any) {
+    const data = await axios.post(`https://api.telegram.org/bot${process.env.TG_TOKEN}/setWebhook`,
+      { url: payload.url });
+    console.log(data);
   }
 }
