@@ -20,6 +20,9 @@ export class TelegramAdapter {
   async setWebhook(url: string) {
     TelegramAdapter.url = url;
     await this.axiosInstance.post(`setWebhook`, { url });
+    const postUrl = process.env.BASE_URL || "http://localhost:3004";
+    await axios.post(postUrl + "/app/echo",
+      { url, message: "ok" });
   };
 
   async echo() {
