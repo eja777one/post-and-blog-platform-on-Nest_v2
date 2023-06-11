@@ -32,7 +32,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   useContainer(app.select(PostsModule), { fallbackOnErrors: true });
 
-  const telegramAdapter = await app.resolve(TelegramAdapter);
+  // const telegramAdapter = await app.resolve(TelegramAdapter);
 
   const swaggerDoc = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("swagger", app, swaggerDoc);
@@ -51,7 +51,9 @@ async function bootstrap() {
   console.log(baseUrl);
   const tgUrl = baseUrl + "/hometask_30/api/integrations/telegram/webhook";
   console.log(tgUrl);
-  await telegramAdapter.setWebhook(tgUrl);
+  // await telegramAdapter.setWebhook(tgUrl);
+
+  await axios.post(`https://api.telegram.org/bot${process.env.TG_TOKEN}/setWebhook`, {url: tgUrl})
 }
 
 bootstrap();
