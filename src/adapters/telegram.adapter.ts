@@ -23,7 +23,8 @@ export class TelegramAdapter {
   };
 
   async echo() {
-    await axios.post(process.env.BASE_URL + "/app/echo",
-      { url: TelegramAdapter.url, baseUrl: process.env.BASE_URL, tgToken: process.env.TG_TOKEN });
+    const url = process.env.BASE_URL || "http://localhost:3004";
+    await axios.post(url + "/app/echo",
+      { url: TelegramAdapter.url, baseUrl: url, tgToken: process.env.TG_TOKEN });
   }
 }

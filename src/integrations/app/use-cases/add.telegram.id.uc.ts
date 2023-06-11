@@ -27,6 +27,7 @@ export class AddTelegramIdUseCase
     const subscription = await this.blogsRepository
       .getSubscriptionBySecret(code);
 
+    if (!subscription) return;
     let flag = false;
 
     if (!subscription?.telegramId) {
