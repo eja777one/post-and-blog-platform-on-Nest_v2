@@ -52,7 +52,6 @@ async function bootstrap() {
   const tgUrl = baseUrl + "/hometask_30/api/integrations/telegram/webhook";
   console.log(tgUrl);
   await telegramAdapter.setWebhook(tgUrl);
-  await axios.post(baseUrl + "/app/echo", { url: baseUrl, tgUrl });
 }
 
 bootstrap();

@@ -23,6 +23,8 @@ import { sw_deleteAllData, sw_getCodeData, sw_getUser, sw_getUsersSessions }
   from "./test.swagger.info";
 import { PassRecTestViewModel, UserTestViewModel } from "../users/users.types";
 import { DeviceViewModel } from "../security/security.types";
+import axios from "axios";
+import { TelegramAdapter } from "../adapters/telegram.adapter";
 
 @ApiTags("Test")
 @SkipThrottle()
@@ -38,6 +40,7 @@ export class TestsController {
     protected usersRepository: UsersRepository,
     protected usersQueryRepository: UsersQueryRepository,
     protected quizRepository: QuizRepository,
+    protected telegramAdapter: TelegramAdapter,
     @InjectDataSource() private dataSource: DataSource
   ) {
   }
@@ -57,6 +60,7 @@ export class TestsController {
     await this.securityRepository.deleteAllSQL();
     await this.passwordRecoveryRepository.deleteAllSQL();
     await this.quizRepository.deleteAllSQL();
+    await this.telegramAdapter.echo();
     res.sendStatus(HttpStatus.NO_CONTENT);
   }
 
